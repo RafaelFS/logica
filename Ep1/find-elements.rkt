@@ -1,4 +1,7 @@
 #lang racket
+
+(provide find-elements)
+
 (define (find-elements my-list x)
   (define elements-list (list))
   (cond [(> (length my-list) 0)
@@ -11,7 +14,3 @@
   )
 
 (define my-list (list (list 1 2) (list 1 3) (list 2 3) (list 3 3)))
-
-(find-elements my-list 1)
-(find-elements my-list 2)
-(find-elements my-list 3)
