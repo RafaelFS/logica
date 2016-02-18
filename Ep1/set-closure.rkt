@@ -1,33 +1,22 @@
 #lang racket
 (require "enum-list.rkt" "find-elements.rkt")
 
-(define A (list 1 2 3 4))
-(define R (list (list 1 2)(list 2 3) (list 3 3)))
+(define A (list 1 2 3 4 5))
+(define R (list (list 1 2) (list 2 3) (list 3 1) (list 3 5) (list 4 5)))
+
 (define resp (list))
-
-(define (replace-start-point new-start some-pair)
-  (cons new-start (cdr some-pair))
-  )
-
-(define (make-new-paths-from-list new-start target-list)
-  (map (lambda (pair)
-         (replace-start-point new-start pair))
-       target-list)
-  )
+(define visited (list))
 
 (define (right-element pair)
   (first (rest pair))
   )
 
-(define added (list))
-(define visited (list))
-
 (define (apply-dfs target-list cur)
   (cond [(> (length target-list) 0) 
          (define new-element (right-element (first target-list)))
-         (cond [(not (member new-element added))
-                (set! added (append added (list new-element)))
-                (set! resp (append resp (list (list cur new-element))))
+         (define vector (list cur new-element))
+         (cond [(not (member vector resp))
+                (set! resp (append resp (list vector)))
                 ])
          (cond [(not (member new-element visited))
                 (set! visited (append visited (list new-element)))
@@ -41,10 +30,6 @@
   (define found-elements (find-elements R v))
   (apply-dfs found-elements cur)
   )
-
-(define (copy-list target-list source-list)
-  (set! target-list (append target-list source-list))
- )
 
 (define (dfs-iterate A)
   (cond [(> (length A) 0)
@@ -60,9 +45,16 @@
 )
 
 (define (set-closure A R)
-  (copy-list resp R)
+  (set! resp R)
   (dfs-iterate A)
   resp
   )
 
-(set-closure A R)
+(display "A:\n")
+(display A)
+
+(display "\n\nR:\n")
+(display R)
+
+(display "\n\nClosure:\n")
+(display (set-closure A R))
