@@ -6,7 +6,7 @@
 
 (define E (list "a" "b" "c"))
 
-(define Rin (list
+(define R (list
              (list (list "S") (list "a" "B" "C"))
              (list (list "S") (list "a" "S" "B" "C"))
              (list (list "a" "B") (list "a" "b"))
@@ -16,11 +16,11 @@
              (list (list "C" "B") (list "B" "C"))
              ))
 
-(define Sin (list "S"))
+(define S (list "S"))
 
-(define G (list V E Rin Sin)) 
+(define G (list V E R S)) 
 
-(define (apply-rule index alpha alphai betai Dcur NovasPrev NovasCur w)
+(define (apply-rule index alpha alphai betai Dcur NovasCur w)
   (cond [(<= index (- (length alpha) (length alphai)))
          (define x (take alpha index))
          (define aux (drop alpha index))
@@ -32,23 +32,23 @@
                      (not (member nova NovasCur))
                      (<= (length nova)(length w)))
                 (set! NovasCur (append NovasCur (list nova)))])
-         (apply-rule (+ index 1) alpha alphai betai Dcur NovasPrev NovasCur w)]
+         (apply-rule (+ index 1) alpha alphai betai Dcur NovasCur w)]
         [else NovasCur]))
 
-(define (iterateR R alpha Dcur NovasPrev NovasCur w)
+(define (iterateR R alpha Dcur NovasCur w)
   (cond [(> (length R) 0)
          (define Ri (first R))
          (define alphai (first Ri))
          (define betai (second Ri))
-         (set! NovasCur (apply-rule 0 alpha alphai betai Dcur NovasPrev NovasCur w))
-         (iterateR (rest R) alpha Dcur NovasPrev NovasCur w)]
+         (set! NovasCur (apply-rule 0 alpha alphai betai Dcur NovasCur w))
+         (iterateR (rest R) alpha Dcur NovasCur w)]
         [else NovasCur])
   )
 
 (define (iterateNovas R Dcur NovasPrev NovasCur w)
   (cond [(> (length NovasPrev) 0)
          (define alpha (first NovasPrev))
-         (set! NovasCur (iterateR R alpha Dcur NovasPrev NovasCur w))
+         (set! NovasCur (iterateR R alpha Dcur NovasCur w))
          (iterateNovas R Dcur (rest NovasPrev) NovasCur w)]
         [else NovasCur])
   )
